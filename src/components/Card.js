@@ -1,5 +1,5 @@
 import React from 'react';
-import propTypes from 'prop-types'
+import propTypes from 'prop-types';
 
 class Card extends React.Component {
   render() {
@@ -40,7 +40,7 @@ class Card extends React.Component {
     );
   }
 }
-Card.propType = {
+Card.propTypes = {
   cardName: propTypes.string.isRequired,
   cardDescription: propTypes.string.isRequired,
   cardAttr1: propTypes.number.isRequired,
@@ -49,19 +49,19 @@ Card.propType = {
   cardImage: propTypes.string.isRequired,
   cardRare: propTypes.string.isRequired,
   cardTrunfo: propTypes.bool.isRequired,
-}
+};
 
-/* https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Expressions_and_Operators 
+/* https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Expressions_and_Operators
 Operador condicional (ternário)
-O operador condicional é o único operador JavaScript que utiliza três operandos. 
+O operador condicional é o único operador JavaScript que utiliza três operandos.
 O operador pode ter um de dois valores baseados em uma condição. A sintaxe é:
 condicao ? valor1 : valor2
-Se condicao for verdadeira, o operador terá o valor de valor1. Caso contrário, terá o valor de valor2. 
+Se condicao for verdadeira, o operador terá o valor de valor1. Caso contrário, terá o valor de valor2.
 Você pode utilizar o operador condicional em qualquer lugar onde utilizaria um operador padrão.
 Por exemplo,
 var status = (idade >= 18) ? "adulto" : "menor de idade";
 Copy to Clipboard
-Esta declaração atribui o valor "adulto" à variável status caso idade seja dezoito ou mais. 
-Caso contrário, atribui o valor "menor de idade".*/
+Esta declaração atribui o valor "adulto" à variável status caso idade seja dezoito ou mais.
+Caso contrário, atribui o valor "menor de idade". */
 
 export default Card;

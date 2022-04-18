@@ -15,8 +15,6 @@ class App extends React.Component {
       cardImage: '',
       cardRare: 'normal',
       cardTrunfo: false,
-      isSaveButtonDisabled: false,
-      onSaveButtonClick: false,
     };
     this.onInputChange = this.onInputChange.bind(this);
   }
@@ -30,7 +28,7 @@ class App extends React.Component {
   }
 
   render() {
-    // requisito 4 desestruturei os estados para usar em cada componente. e o valor das props sao os estados iniciais.asim ele fica dinamico 
+    // requisito 4 desestruturei os estados para usar em cada componente. e o valor das props sao os estados iniciais.asim ele fica dinamico
     const { cardName, cardDescription, cardAttr1,
       cardAttr2, cardImage, cardRare, cardTrunfo, cardAttr3 } = this.state;
     return (
