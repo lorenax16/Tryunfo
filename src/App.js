@@ -26,7 +26,6 @@ class App extends React.Component {
   // requisito 6 ativar a funçao de click por meio de onSaveButton trouxe a informação do state e criei um novo objeto e modifiquei no setState pegando o estado anterior e pasando a nova carta, e logo limpei tudo
 
   onSaveButtonClick() {
-    console.log('teste');
     const { cardName,
       cardDescription,
       cardImage,
@@ -104,16 +103,20 @@ class App extends React.Component {
       this.setState({ isSaveButtonDisabled: true });
     }
   }
+  // requisito 9 filtrar as cartas de barajas, si eleemento.name(eu quero remover ele) e diferente de card.carta(eu quero que fique todas as demas) entao vou verificar
+  // se não e um hastrunfo elimina so auquele el.name se for hastrunfo elmina essa baraja e volta a false.
 
-  buttonExcluir = () => {
+  buttonExcluir = (card) => {
     const { barajas } = this.state;
-    const filtrarCarta = barajas.filter((el) => el.parentNode.removeChild());
-    this.setState({
-      barajas: filtrarCarta,
-    });
-    if (el.cardTrunfo) {
+    const filtro = barajas.filter((el) => el.name !== card.carta);
+    if (card.cardTrunfo) {
       this.setState({
         hasTrunfo: false,
+        barajas: filtro,
+      });
+    } else {
+      this.setState({
+        barajas: filtro,
       });
     }
   }
@@ -142,25 +145,27 @@ class App extends React.Component {
         />
         <div>
           {barajas.map((carta, index) => ( // requisito 8 pegar todas as cartas e suas props e os estads e renderizar na tela
-            <Card
-              key={ index }
-              cardName={ carta.cardName }
-              cardDescription={ carta.cardDescription }
-              cardImage={ carta.cardImage }
-              cardRare={ carta.cardRare }
-              cardAttr1={ carta.cardAttr1 }
-              cardAttr2={ carta.cardAttr2 }
-              cardAttr3={ carta.cardAttr3 }
-              cardTrunfo={ carta.cardTrunfo }
-            />
+            <>
+              <Card
+                key={ index }
+                cardName={ carta.cardName }
+                cardDescription={ carta.cardDescription }
+                cardImage={ carta.cardImage }
+                cardRare={ carta.cardRare }
+                cardAttr1={ carta.cardAttr1 }
+                cardAttr2={ carta.cardAttr2 }
+                cardAttr3={ carta.cardAttr3 }
+                cardTrunfo={ carta.cardTrunfo }
+              />
+              <button
+                type="button"
+                data-testid="delete-button"
+                onClick={ () => this.buttonExcluir(carta) }
+              >
+                Excluir
+              </button>
+            </>
           ))}
-          <button
-            type="button"
-            data-testid="delete-button"
-            onClick={ this.buttonExcluir }
-          >
-            Excluir
-          </button>
         </div>
         <Card
           cardName={ cardName }
