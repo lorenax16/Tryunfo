@@ -107,7 +107,7 @@ class App extends React.Component {
 
   buttonExcluir = () => {
     const { barajas } = this.state;
-    const filtrarCarta = barajas.filter((el) => el.remove());
+    const filtrarCarta = barajas.filter((el) => el.parentNode.removeChild());
     this.setState({
       barajas: filtrarCarta,
     });
@@ -157,7 +157,7 @@ class App extends React.Component {
           <button
             type="button"
             data-testid="delete-button"
-            onClick={ this.buttonExcluir() }
+            onClick={ this.buttonExcluir }
           >
             Excluir
           </button>
