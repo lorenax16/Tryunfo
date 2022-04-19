@@ -9,16 +9,65 @@ class App extends React.Component {
     this.state = {
       cardName: '',
       cardDescription: '',
-      cardAttr1: '',
-      cardAttr2: '',
-      cardAttr3: '',
+      cardAttr1: 0,
+      cardAttr2: 0,
+      cardAttr3: 0,
       cardImage: '',
       cardRare: 'normal',
       cardTrunfo: false,
       isSaveButtonDisabled: true,
+      barajas: [],
+      hasTrunfo: false,
     };
     this.onInputChange = this.onInputChange.bind(this);
     this.verificar = this.verificar.bind(this);
+    this.onSaveButtonClick = this.onSaveButtonClick.bind(this);
+  }
+  // requisito 6 ativar a funçao de click por meio de onSaveButton trouxe a informação do state e criei um novo objeto e modifiquei no setState pegando o estado anterior e pasando a nova carta, e logo limpei tudo
+
+  onSaveButtonClick() {
+    console.log('teste');
+    const { cardName,
+      cardDescription,
+      cardImage,
+      cardRare,
+      cardAttr1,
+      cardAttr2,
+      cardAttr3,
+      cardTrunfo } = this.state;
+    // criar objeto novo
+    const nuevaCarta = {
+      cardName,
+      cardDescription,
+      cardImage,
+      cardRare,
+      cardAttr1,
+      cardAttr2,
+      cardAttr3,
+      cardTrunfo,
+    };
+    // pegar o estado anterior e pasar o estado novo
+    this.setState((prevState) => ({
+      barajas: [...prevState.barajas, nuevaCarta],
+    }));
+    // limpar o state
+    this.setState({
+      cardName: '',
+      cardDescription: '',
+      cardImage: '',
+      cardRare: 'normal',
+      cardAttr1: 0,
+      cardAttr2: 0,
+      cardAttr3: 0,
+      cardTrunfo: false,
+      isSaveButtonDisabled: true,
+    });
+    // ciar validacion do hasTrunfo para requisito 7
+    if (cardTrunfo === true) {
+      this.setState({
+        hasTrunfo: true,
+      });
+    }
   }
 
   // requisito 4 passar o evento de onchange a funcao oninputchange
@@ -30,6 +79,7 @@ class App extends React.Component {
       this.verificar();
     });
   }
+  // requisito 5 verificar os input e modificar o state depois da verificaçao
 
   verificar = () => {
     const { cardName,
@@ -55,11 +105,24 @@ class App extends React.Component {
     }
   }
 
+  buttonExcluir = () => {
+    const { barajas } = this.state;
+    const filtrarCarta = barajas.filter((el) => el.remove());
+    this.setState({
+      barajas: filtrarCarta,
+    });
+    if (el.cardTrunfo) {
+      this.setState({
+        hasTrunfo: false,
+      });
+    }
+  }
+
   render() {
     // requisito 4 desestruturei os estados para usar em cada componente. e o valor das props sao os estados iniciais.asim ele fica dinamico
     const { cardName, cardDescription, cardAttr1,
       cardAttr2, cardImage, cardRare, cardTrunfo,
-      cardAttr3, isSaveButtonDisabled, onSaveButtonClick } = this.state;
+      cardAttr3, isSaveButtonDisabled, barajas, hasTrunfo } = this.state;
     return (
       <div>
         <h1>Adicionar Nova Carta</h1>
@@ -74,9 +137,31 @@ class App extends React.Component {
           cardRare={ cardRare }
           cardTrunfo={ cardTrunfo }
           isSaveButtonDisabled={ isSaveButtonDisabled }
-          onSaveButtonClick={ onSaveButtonClick }
+          onSaveButtonClick={ this.onSaveButtonClick }
+          hasTrunfo={ hasTrunfo }
         />
-
+        <div>
+          {barajas.map((carta, index) => ( // requisito 8 pegar todas as cartas e suas props e os estads e renderizar na tela
+            <Card
+              key={ index }
+              cardName={ carta.cardName }
+              cardDescription={ carta.cardDescription }
+              cardImage={ carta.cardImage }
+              cardRare={ carta.cardRare }
+              cardAttr1={ carta.cardAttr1 }
+              cardAttr2={ carta.cardAttr2 }
+              cardAttr3={ carta.cardAttr3 }
+              cardTrunfo={ carta.cardTrunfo }
+            />
+          ))}
+          <button
+            type="button"
+            data-testid="delete-button"
+            onClick={ this.buttonExcluir() }
+          >
+            Excluir
+          </button>
+        </div>
         <Card
           cardName={ cardName }
           cardDescription={ cardDescription }

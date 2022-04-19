@@ -41,15 +41,15 @@ class Card extends React.Component {
   }
 }
 Card.propTypes = {
-  cardName: propTypes.string.isRequired,
-  cardDescription: propTypes.string.isRequired,
-  cardAttr1: propTypes.number.isRequired,
-  cardAttr2: propTypes.number.isRequired,
-  cardAttr3: propTypes.number.isRequired,
-  cardImage: propTypes.string.isRequired,
-  cardRare: propTypes.string.isRequired,
-  cardTrunfo: propTypes.bool.isRequired,
-};
+  cardName: propTypes.string,
+  cardDescription: propTypes.string,
+  cardAttr1: propTypes.string,
+  cardAttr2: propTypes.string,
+  cardAttr3: propTypes.string,
+  cardImage: propTypes.string,
+  cardRare: propTypes.string,
+  cardTrunfo: propTypes.bool,
+}.isRequired;
 
 /* https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Expressions_and_Operators
 Operador condicional (ternário)
