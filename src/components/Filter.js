@@ -46,6 +46,8 @@ class Filter extends React.Component {
 }
 Filter.propTypes = {
   nomeFiltrado: propTypes.string,
-  onInputChange: propTypes.func,
+  cartaRara: propTypes.string,
+  cartaTrunfo: propTypes.bool,
+  filter: propTypes.func,
 }.isRequired;
 export default Filter;

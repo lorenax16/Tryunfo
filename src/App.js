@@ -6,6 +6,7 @@ import Filter from './components/Filter';
 class App extends React.Component {
   constructor() {
     super();
+    // olhei o github de elaine, luiz pastana, flavio fernandez
     // requisito 4 pasei o estado inicial das minhas variaveis
     this.state = {
       cardName: '',
@@ -21,8 +22,8 @@ class App extends React.Component {
       hasTrunfo: false,
       nomeFiltrado: '',
       cartaTrunfo: false,
-      cartaRara: 'normal',
-      filterArray: [],
+      cartaRara: 'todas',
+      todos: [],
     };
     this.onInputChange = this.onInputChange.bind(this);
     this.verificar = this.verificar.bind(this);
@@ -128,53 +129,38 @@ class App extends React.Component {
   }
   // requisito 10 filtrar pelo nome
 
-  verify = () => {
-    const { barajas, nomeFiltrado, cartaRara, cartaTrunfo } = this.state;
-    let data = barajas;
-    if (nomeFiltrado.length > 0) {
-      data = barajas.filter((el) => el.cardName.includes(nomeFiltrado));
-    }
-    if (cartaRara !== 'todas') {
-      data = barajas.filter((el) => el.cardRare === cartaRara);
-    }
-    if (cartaTrunfo === true) {
-      data = barajas.filter((el) => el.cardTrunfo);
-    }
-    this.setState({ filterArray: data });
-  }
-
   filterName = ({ target }) => {
     const checked = (target.type === 'checkbox') ? target.checked : target.value;
     this.setState({
       [target.name]: checked,
-    }, () => this.verify(target.name, checked));
+    }, () => this.verify());
   }
-  // this.setState(({ cartaTrunfo }) => ({
-  //   cartaTrunfo: !cartaTrunfo,
-  // }));
+
+  verify = () => {
+    const { nomeFiltrado, cartaTrunfo, cartaRara, barajas } = this.state;
+    let filters = barajas;
+    if (nomeFiltrado.length > 0) {
+      filters = filters.filter((item) => item.cardName.includes(nomeFiltrado));
+    }
+    if (cartaRara !== 'todas') {
+      filters = filters.filter((item) => (item.cardRare === cartaRara));
+    }
+    if (cartaTrunfo === true) {
+      filters = filters.filter((item) => (item.cardTrunfo === true));
+      console.log('trunfo', filters);
+    }
+    this.setState({
+      todos: filters,
+    });
+  }
 
   render() {
     // requisito 4 desestruturei os estados para usar em cada componente. e o valor das props sao os estados iniciais.asim ele fica dinamico
     const { cardName, cardDescription, cardAttr1,
       cardAttr2, cardImage, cardRare, cardTrunfo,
       cardAttr3, isSaveButtonDisabled, hasTrunfo,
-      nomeFiltrado, cartaTrunfo, cartaRara, filterArray } = this.state;
+      nomeFiltrado, cartaTrunfo, cartaRara, todos } = this.state;
 
-    // const verifyNome = barajas.filter((item) => item.cardName.includes(nomeFiltrado));
-    // let array = [];
-    // if (hasTrunfo && cartaTrunfo) {
-    //   array = barajas.filter((elemento) => elemento.cardTrunfo === true);
-    // } else if (cartaRara !== 'todas') {
-    //   array = barajas.filter((elemento) => elemento.cardRare === cartaRara);
-    // } else {
-    //   array = verifyNome;
-    // }
-
-    // const filtrados = (cartaTrunfo
-    //   ? barajas.filter((elemento) => elemento.cardTrunfo === true)
-    //   : (barajas.filter((item) => item.cardName.includes(nomeFiltrado))
-    //     .filter((raro) => (cartaRara === 'todas' ? raro
-    //       : raro.cardRare === cartaRara))));
     return (
       <div>
         <h1>Adicionar Nova Carta</h1>
@@ -204,12 +190,12 @@ class App extends React.Component {
         />
         <Filter
           nomeFiltrado={ nomeFiltrado }
-          filter={ this.filter }
+          filter={ this.filterName }
           cartaTrunfo={ cartaTrunfo }
           cartaRara={ cartaRara }
         />
 
-        { filterArray.map((carta, index) => ( // requisito 8 pegar todas as cartas e suas props e os estads e renderizar na tela
+        { todos.map((carta, index) => ( // requisito 8 pegar todas as cartas e suas props e os estads e renderizar na tela
           <div key={ index }>
             <Card
               cardName={ carta.cardName }
