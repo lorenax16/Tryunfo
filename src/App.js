@@ -55,7 +55,7 @@ class App extends React.Component {
     // pegar o estado anterior e pasar o estado novo
     this.setState((prevState) => ({
       barajas: [...prevState.barajas, nuevaCarta],
-    }));
+    }), () => this.verify());
     // limpar o state
     this.setState({
       cardName: '',
@@ -120,11 +120,11 @@ class App extends React.Component {
       this.setState({
         hasTrunfo: false,
         barajas: filtro,
-      });
+      }, () => this.verify());
     } else {
       this.setState({
         barajas: filtro,
-      });
+      }, () => this.verify());
     }
   }
   // requisito 10 filtrar pelo nome
