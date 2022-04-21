@@ -6,7 +6,6 @@ import Filter from './components/Filter';
 class App extends React.Component {
   constructor() {
     super();
-    // olhei o github de elaine, luiz pastana, flavio fernandez
     // requisito 4 pasei o estado inicial das minhas variaveis
     this.state = {
       cardName: '',
@@ -23,6 +22,7 @@ class App extends React.Component {
       nomeFiltrado: '',
       cartaTrunfo: false,
       cartaRara: 'normal',
+      filterArray: [],
     };
     this.onInputChange = this.onInputChange.bind(this);
     this.verificar = this.verificar.bind(this);
@@ -128,25 +128,37 @@ class App extends React.Component {
   }
   // requisito 10 filtrar pelo nome
 
-  filter = ({ target }) => {
+  verify = () => {
+    const { barajas, nomeFiltrado, cartaRara, cartaTrunfo } = this.state;
+    let data = barajas;
+    if (nomeFiltrado.length > 0) {
+      data = barajas.filter((el) => el.cardName.includes(nomeFiltrado));
+    }
+    if (cartaRara !== 'todas') {
+      data = barajas.filter((el) => el.cardRare === cartaRara);
+    }
+    if (cartaTrunfo === true) {
+      data = barajas.filter((el) => el.cardTrunfo);
+    }
+    this.setState({ filterArray: data });
+  }
+
+  filterName = ({ target }) => {
     const checked = (target.type === 'checkbox') ? target.checked : target.value;
     this.setState({
       [target.name]: checked,
-    });
+    }, () => this.verify(target.name, checked));
   }
-
-  verify = () => {
-    this.setState(({ cartaTrunfo }) => ({
-      cartaTrunfo: !cartaTrunfo,
-    }));
-  }
+  // this.setState(({ cartaTrunfo }) => ({
+  //   cartaTrunfo: !cartaTrunfo,
+  // }));
 
   render() {
     // requisito 4 desestruturei os estados para usar em cada componente. e o valor das props sao os estados iniciais.asim ele fica dinamico
     const { cardName, cardDescription, cardAttr1,
       cardAttr2, cardImage, cardRare, cardTrunfo,
-      cardAttr3, isSaveButtonDisabled, barajas, hasTrunfo,
-      nomeFiltrado, cartaTrunfo, cartaRara } = this.state;
+      cardAttr3, isSaveButtonDisabled, hasTrunfo,
+      nomeFiltrado, cartaTrunfo, cartaRara, filterArray } = this.state;
 
     // const verifyNome = barajas.filter((item) => item.cardName.includes(nomeFiltrado));
     // let array = [];
@@ -197,32 +209,27 @@ class App extends React.Component {
           cartaRara={ cartaRara }
         />
 
-        {barajas.filter((elemento) => (cartaTrunfo
-          ? elemento.cardTrunfo === true
-          : (barajas.filter((item) => item.cardName.includes(nomeFiltrado))
-            .filter((raro) => (cartaRara === 'todas' ? raro
-              : raro.cardRare === cartaRara)))))
-          .map((carta, index) => ( // requisito 8 pegar todas as cartas e suas props e os estads e renderizar na tela
-            <div key={ index }>
-              <Card
-                cardName={ carta.cardName }
-                cardDescription={ carta.cardDescription }
-                cardImage={ carta.cardImage }
-                cardRare={ carta.cardRare }
-                cardAttr1={ carta.cardAttr1 }
-                cardAttr2={ carta.cardAttr2 }
-                cardAttr3={ carta.cardAttr3 }
-                cardTrunfo={ carta.cardTrunfo }
-              />
-              <button
-                type="button"
-                data-testid="delete-button"
-                onClick={ () => this.buttonExcluir(carta) }
-              >
-                Excluir
-              </button>
-            </div>
-          ))}
+        { filterArray.map((carta, index) => ( // requisito 8 pegar todas as cartas e suas props e os estads e renderizar na tela
+          <div key={ index }>
+            <Card
+              cardName={ carta.cardName }
+              cardDescription={ carta.cardDescription }
+              cardImage={ carta.cardImage }
+              cardRare={ carta.cardRare }
+              cardAttr1={ carta.cardAttr1 }
+              cardAttr2={ carta.cardAttr2 }
+              cardAttr3={ carta.cardAttr3 }
+              cardTrunfo={ carta.cardTrunfo }
+            />
+            <button
+              type="button"
+              data-testid="delete-button"
+              onClick={ () => this.buttonExcluir(carta) }
+            >
+              Excluir
+            </button>
+          </div>
+        ))}
       </div>
     );
   }
