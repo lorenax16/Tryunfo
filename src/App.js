@@ -148,11 +148,21 @@ class App extends React.Component {
       cardAttr3, isSaveButtonDisabled, barajas, hasTrunfo,
       nomeFiltrado, cartaTrunfo, cartaRara } = this.state;
 
-    const filtrados = (cartaTrunfo
-      ? barajas.filter((elemento) => elemento.cardTrunfo === true)
-      : (barajas.filter((item) => item.cardName.includes(nomeFiltrado))
-        .filter((raro) => (cartaRara === 'todas' ? raro
-          : raro.cardRare === cartaRara))));
+    // const verifyNome = barajas.filter((item) => item.cardName.includes(nomeFiltrado));
+    // let array = [];
+    // if (hasTrunfo && cartaTrunfo) {
+    //   array = barajas.filter((elemento) => elemento.cardTrunfo === true);
+    // } else if (cartaRara !== 'todas') {
+    //   array = barajas.filter((elemento) => elemento.cardRare === cartaRara);
+    // } else {
+    //   array = verifyNome;
+    // }
+
+    // const filtrados = (cartaTrunfo
+    //   ? barajas.filter((elemento) => elemento.cardTrunfo === true)
+    //   : (barajas.filter((item) => item.cardName.includes(nomeFiltrado))
+    //     .filter((raro) => (cartaRara === 'todas' ? raro
+    //       : raro.cardRare === cartaRara))));
     return (
       <div>
         <h1>Adicionar Nova Carta</h1>
@@ -170,39 +180,6 @@ class App extends React.Component {
           onSaveButtonClick={ this.onSaveButtonClick }
           hasTrunfo={ hasTrunfo }
         />
-        <section>
-          { // barajas.filter((item) => (cartaTrunfo ? item.cardTrunfo === true
-            // : barajas.filter((elemento) => elemento.cardName.includes(nomeFiltrado))
-            // .filter((raro) => (cartaRara === 'todas' ? raro
-            //  : raro.cardRare === cartaRara))))
-            //   ( if (item.cartaRara === 'todas');
-            //   // if (item.cartaRara === 'raro') return true;
-            //   // if (item.cartaRara === 'muito raro') return true;
-            //   // cartaRara === 'todas' ? item.cardRare : cartaRara
-            // }))
-            filtrados.map((carta, index) => ( // requisito 8 pegar todas as cartas e suas props e os estads e renderizar na tela
-              <div key={ index }>
-                <Card
-                  cardName={ carta.cardName }
-                  cardDescription={ carta.cardDescription }
-                  cardImage={ carta.cardImage }
-                  cardRare={ carta.cardRare }
-                  cardAttr1={ carta.cardAttr1 }
-                  cardAttr2={ carta.cardAttr2 }
-                  cardAttr3={ carta.cardAttr3 }
-                  cardTrunfo={ carta.cardTrunfo }
-                />
-                <button
-                  type="button"
-                  data-testid="delete-button"
-                  onClick={ () => this.buttonExcluir(carta) }
-                >
-                  Excluir
-                </button>
-              </div>
-            ))
-          }
-        </section>
         <Card
           cardName={ cardName }
           cardDescription={ cardDescription }
@@ -219,6 +196,33 @@ class App extends React.Component {
           cartaTrunfo={ cartaTrunfo }
           cartaRara={ cartaRara }
         />
+
+        {barajas.filter((elemento) => (cartaTrunfo
+          ? elemento.cardTrunfo === true
+          : (barajas.filter((item) => item.cardName.includes(nomeFiltrado))
+            .filter((raro) => (cartaRara === 'todas' ? raro
+              : raro.cardRare === cartaRara)))))
+          .map((carta, index) => ( // requisito 8 pegar todas as cartas e suas props e os estads e renderizar na tela
+            <div key={ index }>
+              <Card
+                cardName={ carta.cardName }
+                cardDescription={ carta.cardDescription }
+                cardImage={ carta.cardImage }
+                cardRare={ carta.cardRare }
+                cardAttr1={ carta.cardAttr1 }
+                cardAttr2={ carta.cardAttr2 }
+                cardAttr3={ carta.cardAttr3 }
+                cardTrunfo={ carta.cardTrunfo }
+              />
+              <button
+                type="button"
+                data-testid="delete-button"
+                onClick={ () => this.buttonExcluir(carta) }
+              >
+                Excluir
+              </button>
+            </div>
+          ))}
       </div>
     );
   }
