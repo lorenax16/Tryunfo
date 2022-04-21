@@ -1,10 +1,12 @@
 import React from 'react';
 import Card from './components/Card';
 import Form from './components/Form';
+import Filter from './components/Filter';
 
 class App extends React.Component {
   constructor() {
     super();
+    // olhei o github de elaine, luiz pastana, flavio fernandez
     // requisito 4 pasei o estado inicial das minhas variaveis
     this.state = {
       cardName: '',
@@ -18,10 +20,14 @@ class App extends React.Component {
       isSaveButtonDisabled: true,
       barajas: [],
       hasTrunfo: false,
+      nomeFiltrado: '',
+      cartaTrunfo: false,
+      cartaRara: 'normal',
     };
     this.onInputChange = this.onInputChange.bind(this);
     this.verificar = this.verificar.bind(this);
     this.onSaveButtonClick = this.onSaveButtonClick.bind(this);
+    // this.filter = this.filter.bind(this);
   }
   // requisito 6 ativar a funçao de click por meio de onSaveButton trouxe a informação do state e criei um novo objeto e modifiquei no setState pegando o estado anterior e pasando a nova carta, e logo limpei tudo
 
@@ -120,12 +126,33 @@ class App extends React.Component {
       });
     }
   }
+  // requisito 10 filtrar pelo nome
+
+  filter = ({ target }) => {
+    const checked = (target.type === 'checkbox') ? target.checked : target.value;
+    this.setState({
+      [target.name]: checked,
+    });
+  }
+
+  verify = () => {
+    this.setState(({ cartaTrunfo }) => ({
+      cartaTrunfo: !cartaTrunfo,
+    }));
+  }
 
   render() {
     // requisito 4 desestruturei os estados para usar em cada componente. e o valor das props sao os estados iniciais.asim ele fica dinamico
     const { cardName, cardDescription, cardAttr1,
       cardAttr2, cardImage, cardRare, cardTrunfo,
-      cardAttr3, isSaveButtonDisabled, barajas, hasTrunfo } = this.state;
+      cardAttr3, isSaveButtonDisabled, barajas, hasTrunfo,
+      nomeFiltrado, cartaTrunfo, cartaRara } = this.state;
+
+    const filtrados = (cartaTrunfo
+      ? barajas.filter((elemento) => elemento.cardTrunfo === true)
+      : (barajas.filter((item) => item.cardName.includes(nomeFiltrado))
+        .filter((raro) => (cartaRara === 'todas' ? raro
+          : raro.cardRare === cartaRara))));
     return (
       <div>
         <h1>Adicionar Nova Carta</h1>
@@ -143,30 +170,39 @@ class App extends React.Component {
           onSaveButtonClick={ this.onSaveButtonClick }
           hasTrunfo={ hasTrunfo }
         />
-        <div>
-          {barajas.map((carta, index) => ( // requisito 8 pegar todas as cartas e suas props e os estads e renderizar na tela
-            <>
-              <Card
-                key={ index }
-                cardName={ carta.cardName }
-                cardDescription={ carta.cardDescription }
-                cardImage={ carta.cardImage }
-                cardRare={ carta.cardRare }
-                cardAttr1={ carta.cardAttr1 }
-                cardAttr2={ carta.cardAttr2 }
-                cardAttr3={ carta.cardAttr3 }
-                cardTrunfo={ carta.cardTrunfo }
-              />
-              <button
-                type="button"
-                data-testid="delete-button"
-                onClick={ () => this.buttonExcluir(carta) }
-              >
-                Excluir
-              </button>
-            </>
-          ))}
-        </div>
+        <section>
+          { // barajas.filter((item) => (cartaTrunfo ? item.cardTrunfo === true
+            // : barajas.filter((elemento) => elemento.cardName.includes(nomeFiltrado))
+            // .filter((raro) => (cartaRara === 'todas' ? raro
+            //  : raro.cardRare === cartaRara))))
+            //   ( if (item.cartaRara === 'todas');
+            //   // if (item.cartaRara === 'raro') return true;
+            //   // if (item.cartaRara === 'muito raro') return true;
+            //   // cartaRara === 'todas' ? item.cardRare : cartaRara
+            // }))
+            filtrados.map((carta, index) => ( // requisito 8 pegar todas as cartas e suas props e os estads e renderizar na tela
+              <div key={ index }>
+                <Card
+                  cardName={ carta.cardName }
+                  cardDescription={ carta.cardDescription }
+                  cardImage={ carta.cardImage }
+                  cardRare={ carta.cardRare }
+                  cardAttr1={ carta.cardAttr1 }
+                  cardAttr2={ carta.cardAttr2 }
+                  cardAttr3={ carta.cardAttr3 }
+                  cardTrunfo={ carta.cardTrunfo }
+                />
+                <button
+                  type="button"
+                  data-testid="delete-button"
+                  onClick={ () => this.buttonExcluir(carta) }
+                >
+                  Excluir
+                </button>
+              </div>
+            ))
+          }
+        </section>
         <Card
           cardName={ cardName }
           cardDescription={ cardDescription }
@@ -176,6 +212,12 @@ class App extends React.Component {
           cardImage={ cardImage }
           cardRare={ cardRare }
           cardTrunfo={ cardTrunfo }
+        />
+        <Filter
+          nomeFiltrado={ nomeFiltrado }
+          filter={ this.filter }
+          cartaTrunfo={ cartaTrunfo }
+          cartaRara={ cartaRara }
         />
       </div>
     );
